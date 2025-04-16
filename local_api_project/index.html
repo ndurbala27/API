@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Form</title>
+</head>
+<body>
+  <h3>Submit Data</h3>
+  <form id="apiForm">
+    Name: <input type="text" name="name"><br>
+    Score: <input type="number" name="score"><br>
+    <button type="submit">Send</button>
+  </form>
+
+  <h3>API Response</h3>
+  <pre id="output"></pre>
+
+  <script>
+    document.getElementById("apiForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const data = {
+        name: form.get("name"),
+        score: parseInt(form.get("score"))
+      };
+
+      fetch("http://localhost:8000/api/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(result => {
+        document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+      })
+      .catch(err => {
+        document.getElementById("output").textContent = "Error: " + err;
+      });
+    });
+  </script>
+</body>
+</html>
